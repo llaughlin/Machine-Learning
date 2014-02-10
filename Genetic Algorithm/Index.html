@@ -1,14 +1,24 @@
 <html>
-<head title="Genetic Match String">
-    <script src="jquery-2.1.0.min.js"> </script>
-    <script src="Match-String.js"> </script>
-    <style type="text/css">
-        body {
-            font-family: Courier New;
-            font-size: 12px;
-        }
-    </style>
-</head>
-<body>
-</body>
+	<head title="Genetic Match String">
+
+		<script src="jquery-2.1.0.min.js" type="text/javascript"></script>
+		<script src="knockout-3.0.0.js" type="text/javascript"></script>
+		<script src="Match-String.js" type="text/javascript"></script>
+		<style type="text/css">
+body {
+			font-family: Courier New;
+			font-size: 12px;
+		}
+		</style>
+		<title></title>
+	</head>
+	<body>
+		<div>Generation: <span data-bind='text: generationNumber'></span></div>
+		<div data-bind='text: goal'></div>
+		<ul data-bind='foreach: members'>
+			<li>
+				<span data-bind='text: code' ></span>(<span data-bind='text: cost'></span>)
+			</li>
+		</ul>
+	</body>
 </html>
