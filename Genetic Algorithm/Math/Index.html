@@ -1,6 +1,8 @@
 <html>
 <head title="Genetic Match String">
     <script src="jquery-2.1.0.min.js"> </script>
+    <script src="underscore-min.js"></script>
+    <script src="knockout-3.0.0.js"></script>
     <script src="Math.js"> </script>
     <style type="text/css">
         body {
@@ -10,6 +12,13 @@
     </style>
 </head>
 <body>
-    <a href="http://www.ai-junkie.com/ga/intro/gat3.html"></a>
+    <a href="http://www.ai-junkie.com/ga/intro/gat3.html">Math Algorithm</a>
+    <div>Generation: <span data-bind='text: generationNumber'></span></div>
+    <div data-bind='text: goal'></div>
+    <ul data-bind='foreach: members'>
+        <li>
+            <span data-bind='text: display'></span> (Value:<span data-bind="text: value"></span>)(Cost:<span data-bind='text: cost'></span>)
+        </li>
+    </ul>
 </body>
 </html>

@@ -8,11 +8,11 @@ $(function() {
         self.code = ko.observable(code || '');
         self.cost = ko.observable(9999);
 
-        self.random = function(length) {
+        self.random = function (length) {
             while (length--) {
                 self.code(self.code() + String.fromCharCode(Math.floor(Math.random() * 255)));
             }
-        }
+        };
         self.mutate = function(chance) {
             if (Math.random() > chance) return;
 
