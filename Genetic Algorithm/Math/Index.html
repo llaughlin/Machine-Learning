@@ -9,16 +9,28 @@
             font-family: Courier New;
             font-size: 12px;
         }
+        table td {
+            padding-right: 10px;
+        }
     </style>
 </head>
 <body>
     <a href="http://www.ai-junkie.com/ga/intro/gat3.html">Math Algorithm</a>
-    <div>Generation: <span data-bind='text: generationNumber'></span></div>
-    <div data-bind='text: goal'></div>
-    <ul data-bind='foreach: members'>
-        <li>
-            <span data-bind='text: display'></span> (Value:<span data-bind="text: value"></span>)(Cost:<span data-bind='text: cost'></span>)
-        </li>
-    </ul>
+    <div>Generation: <span data-bind='text: generationNumber'></span> Continue?<input type="checkbox" data-bind="checked: running"/></div>
+    <div><span data-bind='text: goal'></span> <input type="text" data-bind="value: input"/> <button data-bind="click: setPopulation">New Goal</button></div>
+    <table data-bind='foreach: members'>
+        <tr>
+            <td>
+                <span data-bind='text: stringSequence'></span>
+            </td>
+            <td>
+                (Value:<span data-bind="text: value"></span>)
+            </td>
+            <td>
+                (Cost:<span data-bind='text: cost'></span>)
+            </td>
+            <td><span data-bind='text: display'></span></td>
+        </tr>
+    </table>
 </body>
 </html>

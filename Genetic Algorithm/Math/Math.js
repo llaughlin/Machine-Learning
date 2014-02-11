@@ -8,8 +8,13 @@ $(function () {
     };
 
     String.prototype.toHex = function() {
+        if (this == '+') return 10;
+        if (this == '-') return 11;
+        if (this == '*') return 12;
+        if (this == '/') return 13;
         return parseInt(this, 16);
-    };
+
+    }
     String.prototype.isNumber = function() {
         return this.toHex() < 10;
     };
@@ -20,32 +25,44 @@ $(function () {
     var Gene = function (code) {
         var self = this;
         self.code = ko.observable(code || '');
-        self.cost = ko.observable(9999);
+        self.cost = ko.observable(Number.MAX_VALUE);
+        self.stringSequence = ko.observable();
 
         self.generate = function(length) {
              while(length--){
                  self.code(self.code() + Math.floor(Math.random()*13).toHex());
             }
         };
+        
         self.mutate = function(chance) {
             if (Math.random() > chance) return;
-                
+            
+            var add = Math.random() <= 0.25;
+            var del = Math.random() <= 0.25;
+                            
             var index = Math.floor(Math.random() * self.code().length);
             var upOrDown = Math.random() <= 0.5 ? -1 : 1;
-            var distance = 1;//Math.floor(Math.random() * Math.baseLog(20, self.cost()) + 1);
-            //if (self.cost() < 10) {
-            //    distance = 1;
-            //}
-
-            var newChar = ((self.code()[index].toHex() + distance * upOrDown) % 13).toHex();
+            var distance = Math.floor(Math.random() * 3);
+           
+            var sourceChar = self.code()[index].toHex();
+           
+            var newChar = ((sourceChar + distance * upOrDown) % 13).toHex();
             var newString = '';
-            for (i = 0; i < self.code().length; i++) {
+            for (var i = 0; i < self.code().length; i++) {
                 if (i == index) newString += newChar;
                 else newString += self.code()[i];
             }
-
+            if(add){
+                newString += newChar;
+            }
+            if(del && self.code().length > 1){
+                newString = newString.split('');
+                newString = newString.splice(Math.floor(Math.random() * newString.length), 1);
+                newString = newString.join('');
+            }
             self.code(newString);
         };
+        
         self.mate = function (gene) {
             var pivot = Math.round(self.code().length / 2) - 1;
 
@@ -54,31 +71,32 @@ $(function () {
 
             return [new Gene(child1), new Gene(child2)];
         };
+        
         self.calcCost = function (compareTo) {
             var value = self.value(),
-            cost = parseInt(compareTo) - value;
+            cost = Math.abs(parseInt(compareTo) - value);
+            cost += (self.display().length - self.stringSequence().length) * 2;
+            
             self.cost(cost);
         };
+        
         self.decode = function (code) {
             return _.map(code, function (c) {
                 switch (c.toHex()) {
                     case 10:
                         return '+';
-                        break;
                     case 11:
                         return '-';
-                        break;
                     case 12:
                         return '*';
-                        break;
                     case 13:
                         return '/';
-                        break;
                     default:
                         return c;
                 }
             });
         };
+
         self.value = ko.computed(function(){
             var sequence = [],
             last = '';
@@ -98,14 +116,13 @@ $(function () {
             if(!last.isNumber()){
                 sequence.pop(); // remove trailing operator
             }
-            var stringSequence = self.decode(sequence).join(' ');
-            //console.log('Eval(' + sequence + ')');
+            self.stringSequence(self.decode(sequence).join(' '));
             
             try{
-                var val = eval(stringSequence);
-            return val;
+                var val = eval(self.stringSequence()) || 0;
+                return val; 
             }catch(e){
-                console.log('Error evaluating sequence "' + stringSequence + '": ' + e);
+                console.log('Error evaluating sequence "' + self.stringSequence() + '": ' + e);
             }
             
         });
@@ -121,6 +138,10 @@ $(function () {
         self.members = ko.observableArray();
         self.goal = ko.observable(goal);
         self.generationNumber = ko.observable(0);
+        self.running = ko.observable(true);
+        self.success = ko.observable(false);
+        self.speed = ko.observable(20);
+        self.input = ko.observable('123');
         while (size--) {
             var gene = new Gene();
             gene.generate(self.goal().length);
@@ -136,31 +157,43 @@ $(function () {
             for (var i = 0; i < self.members().length; i++) {
                 self.members()[i].calcCost(self.goal());
             }
-
             self.sort();
+            
             var children = self.members()[0].mate(self.members()[1]);
             self.members().splice(self.members().length - 2, 2, children[0], children[1]);
-
+            
             for (var i = 0; i < self.members().length; i++) {
                 self.members()[i].mutate(0.5);
-                this.members()[i].calcCost(this.goal());
-                if (self.members()[i].code() == self.goal()) {
-                    self.sort();
-                    return true;
+                self.members()[i].calcCost(self.goal());
+                if (self.members()[i].value() == self.goal()) {
+                    self.success(true);
                 }
             }
+            if(self.success()){
+                  self.sort();
+                return true;
+            }
             self.generationNumber(self.generationNumber() + 1);
-            setTimeout(function () {
-                //self.generation();
-            }, 50);
+            self.sort();
+            if (self.running()) {
+                setTimeout(function() {
+                    self.generation();
+                }, self.speed());
+            }
         };
+        
+        self.setPopulation = function(){
+            self.goal(self.input());
+            
+            self.generation();
+        }
     };
 
     console.clear();
 
-    population = new Population("999", 20);
+    population = new Population('123', 20);
 
     ko.applyBindings(population);
 
-    population.generation();
+    
 });
