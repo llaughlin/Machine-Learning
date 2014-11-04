@@ -1,9 +1,14 @@
-$(function() {
-    Math.baseLog = function(base, x) {
+/// <reference path="/Lib/jquery.js" />
+/// <reference path="/Lib/underscore-min.js" />
+/// <reference path="/Lib/underscore.string.min.js" />
+/// <reference path="/Lib/knockout-min.js" />
+/// <reference path="/Lib/knockout-sortable.min.js" />
+$(function () {
+    Math.baseLog = function (base, x) {
         return Math.log(x) / Math.log(base);
-    }
+    };
 
-    var Gene = function(code) {
+    var Gene = function (code) {
         var self = this;
         self.code = ko.observable(code || '');
         self.cost = ko.observable(9999);
@@ -13,45 +18,46 @@ $(function() {
                 self.code(self.code() + String.fromCharCode(Math.floor(Math.random() * 255)));
             }
         };
-        self.mutate = function(chance) {
-            if (Math.random() > chance) return;
+        self.mutate = function (chance) {
+            if (Math.random() > chance)
+                return;
 
             var index = Math.floor(Math.random() * self.code().length);
             var upOrDown = Math.random() <= 0.5 ? -1 : 1;
             var distance = Math.floor(Math.random() * Math.baseLog(20, self.cost()) + 1);
-            if(self.cost() < 10){
+            if (self.cost() < 10) {
                 distance = 1;
             }
-            
+
             var newChar = String.fromCharCode(self.code().charCodeAt(index) + distance * upOrDown);
             var newString = '';
             for (i = 0; i < self.code().length; i++) {
-                if (i == index) newString += newChar;
-                else newString += self.code()[i];
+                if (i == index)
+                    newString += newChar;
+                else
+                    newString += self.code()[i];
             }
 
             self.code(newString);
-
-        }
-        self.mate = function(gene) {
+        };
+        self.mate = function (gene) {
             var pivot = Math.round(self.code().length / 2) - 1;
 
             var child1 = self.code().substr(0, pivot) + gene.code().substr(pivot);
             var child2 = gene.code().substr(0, pivot) + self.code().substr(pivot);
 
             return [new Gene(child1), new Gene(child2)];
-        }
-        self.calcCost = function(compareTo) {
+        };
+        self.calcCost = function (compareTo) {
             var total = 0;
             for (i = 0; i < self.code().length; i++) {
                 total += Math.pow(self.code().charCodeAt(i) - compareTo.charCodeAt(i), 2) * Math.pow(self.code().charCodeAt(i) - compareTo.charCodeAt(i), 2);
             }
             self.cost(total);
-        }
+        };
     };
 
-
-    var Population = function(goal, size) {
+    var Population = function (goal, size) {
         var self = this;
         self.members = ko.observableArray();
         self.goal = ko.observable(goal);
@@ -62,15 +68,14 @@ $(function() {
             self.members.push(gene);
         }
 
-        self.sort = function() {
-            self.members.sort(function(a, b) {
+        self.sort = function () {
+            self.members.sort(function (a, b) {
                 return a.cost() - b.cost();
             });
-        }
-        self.generation = function() {
+        };
+        self.generation = function () {
             for (var i = 0; i < self.members().length; i++) {
                 self.members()[i].calcCost(self.goal());
-
             }
 
             self.sort();
@@ -86,8 +91,8 @@ $(function() {
                     return true;
                 }
             }
-            self.generationNumber(self.generationNumber()+1);
-            setTimeout(function() {
+            self.generationNumber(self.generationNumber() + 1);
+            setTimeout(function () {
                 self.generation();
             }, 5);
         };

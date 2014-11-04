@@ -1,23 +1,28 @@
 <html>
 <head title="Genetic Match String">
-    <script src="jquery-2.1.0.min.js"> </script>
-    <script src="underscore-min.js"></script>
-    <script src="knockout-3.0.0.js"></script>
+    <script src="/Lib/jquery.js" type="text/javascript"></script>
+    <script src="/Lib/underscore-min.js" type="text/javascript"></script>
+    <script src="/Lib/underscore.string.min.js" type="text/javascript"></script>
+    <script src="/Lib/knockout-min.js" type="text/javascript"></script>
+    <script src="/Lib/knockout-sortable.min.js" type="text/javascript"></script>
+
     <script src="Math.js"> </script>
     <style type="text/css">
         body {
             font-family: Courier New;
             font-size: 12px;
         }
+
         table td {
             padding-right: 10px;
         }
     </style>
 </head>
 <body>
+    <div><a href="/index.html">Home</a></div>
     <a href="http://www.ai-junkie.com/ga/intro/gat3.html">Math Algorithm</a>
-    <div>Generation: <span data-bind='text: generationNumber'></span> Continue?<input type="checkbox" data-bind="checked: running"/></div>
-    <div><span data-bind='text: goal'></span> <input type="text" data-bind="value: input"/> <button data-bind="click: setPopulation">New Goal</button></div>
+    <div>Generation: <span data-bind='text: generationNumber'></span> Continue?<input type="checkbox" data-bind="checked: running" /></div>
+    <div><span data-bind='text: goal'></span> <input type="text" data-bind="value: input" /> <button data-bind="click: setPopulation">New Goal</button></div>
     <table data-bind='foreach: members'>
         <tr>
             <td>

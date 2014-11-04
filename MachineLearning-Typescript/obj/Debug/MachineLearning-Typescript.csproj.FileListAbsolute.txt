@@ -1,0 +1,6 @@
+C:\Repo\GitHub\MachineLearning-Typescript\MachineLearning-Typescript\bin\MachineLearning-Typescript.dll.config
+C:\Repo\GitHub\MachineLearning-Typescript\MachineLearning-Typescript\bin\MachineLearning-Typescript.dll
+C:\Repo\GitHub\MachineLearning-Typescript\MachineLearning-Typescript\bin\MachineLearning-Typescript.pdb
+C:\Repo\GitHub\MachineLearning-Typescript\MachineLearning-Typescript\obj\Debug\MachineLearning-Typescript.csprojResolveAssemblyReference.cache
+C:\Repo\GitHub\MachineLearning-Typescript\MachineLearning-Typescript\obj\Debug\MachineLearning-Typescript.dll
+C:\Repo\GitHub\MachineLearning-Typescript\MachineLearning-Typescript\obj\Debug\MachineLearning-Typescript.pdb
